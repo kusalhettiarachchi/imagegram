@@ -1,0 +1,37 @@
+{
+  "name": "imagegram",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "author": "hak",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "export NODE_ENV=DEV && nodemon src/index.js",
+    "clean": "rimraf dist && rimraf logs && rimraf images",
+    "build": "npm run clean && babel src -s -D -d dist",
+    "migration": "npm run build && scripts/init_db.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geshan/nodejs-sqlite.git"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geshan/nodejs-sqlite/issues"
+  },
+  "homepage": "https://github.com/geshan/nodejs-sqlite#readme",
+  "dependencies": {
+    "better-sqlite3": "^7.5.0",
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "multer": "^1.4.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "express-oas-generator": "^1.0.41",
+    "nodemon": "^2.0.15"
+  }
+}
