@@ -1,6 +1,6 @@
-const INSERT_POST     = `INSERT INTO post (post_id, title, author, content, image_url, created_at) VALUES (@post_id, @title, @author, @content, @image_url, @created_at)`
+const INSERT_POST     = `INSERT INTO post (post_id, title, author, content, image_url, created_at) VALUES (@postId, @title, @author, @content, @imageUrl, @createdAt)`
 
-const INSERT_COMMENT  = `INSERT INTO comment (comment_id, content, author, post_id, created_at) VALUES (@comment_id, @content, @author, @post_id, @created_at)`
+const INSERT_COMMENT  = `INSERT INTO comment (comment_id, content, author, post_id, created_at) VALUES (@commentId, @content, @author, @post_Id, @createdAt)`
 
 const SELECT_POSTS    = `SELECT  
                               p.id, 
@@ -30,7 +30,7 @@ const SELECT_POSTS    = `SELECT
 
 const GET_POST        = `SELECT id, image_url FROM post WHERE post_id = @postId`;
 
-const UPDATE_POST     = `UPDATE post SET nsfw = @nsfw, processed = 1, image_url = @image_url WHERE post_id = @postId;`;
+const UPDATE_POST     = `UPDATE post SET nsfw = @nsfw, processed = 1, image_url = @imageUrl WHERE post_id = @postId;`;
 
 module.exports = {
     GET_POST,

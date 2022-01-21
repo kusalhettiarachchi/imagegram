@@ -44,8 +44,8 @@ router.post('/', upload.single('image'),
   try {
     const result = posts.createPost(req.body, req.file.path);
     res.json(result);
-    if (result.data && result.data.post_id) {
-      req.post_id = result.data.post_id;
+    if (result.data && result.data.postId) {
+      req.postId = result.data.postId;
     }      
     next();
   } catch (err) {
@@ -53,16 +53,16 @@ router.post('/', upload.single('image'),
     res.json({msg: 'failed', data: {detail: err.message}});
   }
 }, (req) => {
-  if (req.post_id) {
-    console.log(`processing image for post ${req.post_id}`);
-    posts.processPost(req.post_id);
+  if (req.postId) {
+    console.log(`processing image for post ${req.postId}`);
+    posts.processPost(req.postId);
   }
 });
 
 /* POST comment */
-router.post('/:post_id/comment', (req, res) => {
+router.post('/:postId/comment', (req, res) => {
   try {
-    res.json(posts.createComment(req.params.post_id, req.body));
+    res.json(posts.createComment(req.params.postId, req.body));
   } catch(err) {
     console.error(`Error while adding comment `, err.message);
     res.json({msg: 'failed', data: {detail: err.message}});

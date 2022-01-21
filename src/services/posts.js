@@ -42,22 +42,24 @@ getPosts = (page = 1) => {
     posts.push(currentPost);
   }
   return {
-    posts, 
-    page,
+    data: {
+            posts, 
+            page
+            },
     msg: 'success'
   }
 }
 
-createPost = (postObj, image_url) => {
+createPost = (postObj, imageUrl) => {
   _validateCreatePost(postObj);
   const {author, content, title} = postObj;
-  created_at = Date.now();
-  post_id = uuidv4();
+  createdAt = Date.now();
+  postId = uuidv4();
   msg = 'failed to create post!';
   try {
-    const result = db.run(INSERT_POST, {post_id, title, author, content, image_url, created_at});
+    const result = db.run(INSERT_POST, {postId, title, author, content, imageUrl, createdAt});
     if (result.changes) {
-      return {data: {post_id}, msg: 'post created!'};
+      return {data: {postId}, msg: 'post created!'};
     }
   } catch (exception) {
     console.log(exception);
@@ -68,14 +70,14 @@ createPost = (postObj, image_url) => {
 createComment = (id, commentObj) => {
   _validateCreateComment(commentObj);
   const {content, author} = commentObj;
-  created_at = Date.now();
-  comment_id = uuidv4();
+  createdAt = Date.now();
+  commentId = uuidv4();
   msg = 'failed to add comment!';
   try {
-    const post_id = db.query(GET_POST, {postId: id})[0].id;
-    const result = db.run(INSERT_COMMENT, {comment_id, content, author, post_id, created_at});
+    const postId = db.query(GET_POST, {postId: id})[0].id;
+    const result = db.run(INSERT_COMMENT, {commentId, content, author, postId, createdAt});
     if (result.changes) {
-      return {data: {comment_id}, msg: 'comment added!'};
+      return {data: {commentId}, msg: 'comment added!'};
     }
   } catch (exception) {
     console.log(exception);
@@ -91,7 +93,7 @@ processPost = (id) => {
       'x-functions-key': FUNCTION_KEY
     },
     formData: {
-      'image': fs.createReadStream(result.image_url)
+      'image': fs.createReadStream(result.imageUrl)
     }
   };
 
@@ -101,7 +103,7 @@ request.post(options, (err, res, body) => {
   }
   console.log('server responded with:', body);
   const b = JSON.parse(body);
-  db.run(UPDATE_POST, {nsfw: _analyse(b).isNSFW, image_url: b.media.uri, postId: id});
+  db.run(UPDATE_POST, {nsfw: _analyse(b).isNSFW, imageUrl: b.media.uri, postId: id});
 
 });
 }
