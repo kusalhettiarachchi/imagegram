@@ -1,0 +1,162 @@
+---
+swagger: "2.0"
+info:
+  title: imagegram
+  version: 1.0.0
+  description: "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3)."
+  license:
+    name: ISC
+paths:
+  /api/:
+    get:
+      consumes:
+      - application/json
+      tags: []
+      responses:
+        "200":
+          examples:
+            application/json:
+              message: alive
+              apidoc: /api-docs
+      summary: /api/
+  /api/posts:
+    get:
+      consumes:
+      - application/json
+      tags: []
+      responses:
+        "200":
+          examples:
+            application/json:
+              posts:
+              - id: 139d83d0-94e6-466a-9e58-c75029d298ae
+                title: test run 41
+                author: kusal
+                url: https://bandlabimages.blob.core.windows.net/images/test%20run%2041-1642713656477.jpg
+                created: 1642713656492
+                comments:
+                - {}
+              - id: fa7d8f23-45ef-4544-b288-821596aa480d
+                title: my car
+                author: another
+                url: https://bandlabimages.blob.core.windows.net/images/my%20car-1642714921335.jpg
+                created: 1642714921353
+                comments:
+                - id: 3ba36f36-ab16-4357-8648-daaeb3d1821b
+                  author: kripky
+                  content: nice porsche car!
+                  created: 1642715033999
+                - id: 81ef6657-7058-4bf8-97de-1323ae609dec
+                  author: kripky
+                  content: nice porsche car!
+                  created: 1642714959496
+              page: 1
+              msg: success
+      summary: /api/posts
+    post:
+      consumes:
+      - multipart/form-data
+      tags: []
+      parameters:
+      - name: author
+        description: ""
+        in: formData
+        required: true
+        type: string
+      - name: title
+        description: ""
+        in: formData
+        required: true
+        type: string
+      - name: content
+        description: ""
+        in: formData
+        required: true
+        type: string
+      - name: Content-Type
+        description: ""
+        in: header
+        required: true
+        type: string
+      - name: image
+        description: ""
+        in: formData
+        required: true
+      responses:
+        "200":
+          examples:
+            application/json:
+              data:
+                post_id: cb91ef96-8eea-472e-a62c-5c9d186ee785
+              msg: post created!
+      summary: /api/posts
+    parameters:
+    - name: Content-Type
+      description: ""
+      in: header
+      required: true
+      type: string
+  /api/posts/{postId}/comment:
+    post:
+      consumes:
+      - application/json
+      tags: []
+      parameters:
+      - name: body
+        schema:
+          $ref: '#/definitions/NewComment'
+        in: body
+        required: true
+      responses:
+        "200":
+          examples:
+            application/json:
+              data:
+                comment_id: e4f0fe28-56d8-4663-89c5-8bbdada41162
+              msg: comment added!
+      summary: "/api/posts/{postId}/comment"
+definitions:
+  NewComment:
+    title: Root Type for NewComment
+    description: ""
+    type: object
+    properties:
+      content:
+        type: string
+      author:
+        type: string
+    example:
+      content: wow fast!
+      author: sheldon
+  APIResponse:
+    title: Root Type for APIResponse
+    description: ""
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          comment_id:
+            type: string
+      msg:
+        type: string
+    example:
+      data:
+        comment_id: e4f0fe28-56d8-4663-89c5-8bbdada41162
+      msg: comment added!
+responses:
+  APIResponse:
+    description: |-
+      {
+          "data": {
+              "comment_id": "e4f0fe28-56d8-4663-89c5-8bbdada41162"
+          },
+          "msg": "comment added!"
+      }
+    schema:
+      $ref: '#/definitions/APIResponse'
+    examples:
+      application/json:
+        data:
+          comment_id: e4f0fe28-56d8-4663-89c5-8bbdada41162
+        msg: comment added!
