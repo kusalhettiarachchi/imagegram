@@ -31,7 +31,7 @@ const upload = multer({
 /* GET posts listing. */
 router.get('/', function(req, res) {
   try {
-    res.json(posts.getPosts(req.query.page));
+    res.json(posts.getPosts());
   } catch(err) {
     console.error(`Error while getting posts `, err.message);
     res.json({msg: 'failed', data: {detail: err.message}});

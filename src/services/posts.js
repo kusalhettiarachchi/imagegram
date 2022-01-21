@@ -9,7 +9,12 @@ const db              = require('../database/db');
 const {
   SERVICE_URL,
   FUNCTION_KEY,
-  LIST_PER_PAGE
+  NUDITY,
+  WEAPON,
+  ALCOHOL,
+  DRUGS,
+  OFFENSIVE,
+  GORE
 }                      = require('../config');
 
 const {
@@ -17,12 +22,12 @@ const {
   INSERT_COMMENT, 
   INSERT_POST, 
   SELECT_POSTS, 
-  UPDATE_POST
+  UPDATE_POST,
+  INCREMENT_COMMENT_COUNT
 }                     = require('../database/queries');
 
-getPosts = (page = 1) => {
-  const offset = (page - 1) * Number(LIST_PER_PAGE);
-  const data = db.query(SELECT_POSTS, [offset, Number(LIST_PER_PAGE)]);
+getPosts = () => {
+  const data = db.query(SELECT_POSTS, {});
   posts = [];
   if (data.length) {
     let currentPost = null;
@@ -34,7 +39,7 @@ getPosts = (page = 1) => {
         if (currentPost.id != e.post_id) {
           posts.push(currentPost);
           currentPost = _parsePost(e);
-        } else {
+        } else if (currentPost.comments.length < 2) {
           currentPost.comments.push(_parseComment(e));
         }
       }
@@ -43,8 +48,7 @@ getPosts = (page = 1) => {
   }
   return {
     data: {
-            posts, 
-            page
+            posts
             },
     msg: 'success'
   }
@@ -74,8 +78,11 @@ createComment = (id, commentObj) => {
   commentId = uuidv4();
   msg = 'failed to add comment!';
   try {
-    const postId = db.query(GET_POST, {postId: id})[0].id;
-    const result = db.run(INSERT_COMMENT, {commentId, content, author, postId, createdAt});
+    const post   = db.query(GET_POST, {postId: id})[0];
+    const postId = post.id;
+    let result = db.run(INSERT_COMMENT, {commentId, content, author, postId, createdAt});
+    const count = post.comment_count + 1;
+    result = db.run(INCREMENT_COMMENT_COUNT, {count, postId});
     if (result.changes) {
       return {data: {commentId}, msg: 'comment added!'};
     }
@@ -93,7 +100,7 @@ processPost = (id) => {
       'x-functions-key': FUNCTION_KEY
     },
     formData: {
-      'image': fs.createReadStream(result.imageUrl)
+      'image': fs.createReadStream(result.image_url)
     }
   };
 
@@ -109,7 +116,7 @@ request.post(options, (err, res, body) => {
 }
 
 _analyse = (a) => {
-  return {'isNSFW': a.nudity.safe < 0.5 || a.weapon > 0.5 || a.alcohol > 0.5 || a.drugs > 0.5 || a.offensive.prob > 0.5 || a.gore.prob > 0.5 == true ? 1 : 0};
+  return {'isNSFW': a.nudity.safe < NUDITY || a.weapon > WEAPON || a.alcohol > ALCOHOL || a.drugs > DRUGS || a.offensive.prob > OFFENSIVE || a.gore.prob > GORE == true ? 1 : 0};
 }
 
 _validateCreatePost = (post)  => {
@@ -172,6 +179,7 @@ _parsePost = (e) => {
     title: e.post_title, 
     author: e.post_author, 
     url: e.url, 
+    content: e.post_content,
     created: e.post_created_at,
     comments: [
       _parseComment(e)

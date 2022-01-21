@@ -14,6 +14,7 @@ const INIT_POSTS_DB     = `CREATE TABLE post (
                                     title TEXT UNIQUE NOT NULL, 
                                     content TEXT,
                                     image_url TEXT,
+                                    comment_count INTEGER DEFAULT 0 NOT NULL,
                                     nsfw INTEGER DEFAULT 1 NOT NULL,
                                     processed INTEGER DEFAULT 0 NOT NULL,
                                     created_at INTEGER
