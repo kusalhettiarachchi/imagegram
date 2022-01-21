@@ -1,0 +1,10 @@
+{
+	"variables": [],
+	"info": {
+		"name": "imagegram",
+		"_postman_id": "23380de2-3513-815b-e57a-f4a16d3e2ba4",
+		"description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": []
+}
