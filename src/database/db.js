@@ -1,5 +1,6 @@
-const sqlite = require('better-sqlite3');
-const path = require('path');
+const sqlite    = require('better-sqlite3');
+const path      = require('path');
+
 const db = new sqlite(path.resolve('imagegram.db'), {fileMustExist: true});
 
 function query(sql, params) {
@@ -11,6 +12,7 @@ function run(sql, params) {
 }
 
 module.exports = {
-  query,
-  run
+    db,
+    query,
+    run
 }

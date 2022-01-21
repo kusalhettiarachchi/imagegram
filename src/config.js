@@ -1,7 +1,3 @@
-const env = process.env;
-
-const config = {
-  listPerPage: env.LIST_PER_PAGE || 10,
-}
+const config = require('dotenv').config().parsed;
 
 module.exports = config;

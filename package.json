@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "author": "hak",
+  "author": "Kusal Hettiarachchi",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "export NODE_ENV=DEV && nodemon src/index.js",
@@ -13,25 +13,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/geshan/nodejs-sqlite.git"
+    "url": "git+git@github.com:kusalhettiarachchi/imagegram.git"
   },
   "keywords": [],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/geshan/nodejs-sqlite/issues"
+    "url": "https://github.com:kusalhettiarachchi/imagegram.git"
   },
-  "homepage": "https://github.com/geshan/nodejs-sqlite#readme",
   "dependencies": {
     "better-sqlite3": "^7.5.0",
     "body-parser": "^1.19.1",
+    "dotenv": "^14.2.0",
     "express": "^4.17.2",
-    "multer": "^1.4.4"
+    "express-oas-generator": "^1.0.41",
+    "multer": "^1.4.4",
+    "request": "^2.88.2",
+    "rimraf": "^3.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
-    "express-oas-generator": "^1.0.41",
     "nodemon": "^2.0.15"
   }
 }

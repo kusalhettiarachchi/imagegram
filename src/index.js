@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 
 app.get('/api/', (req, res) => {
-  res.json({message: 'alive'});
+  res.json({message: 'alive', apidoc: '/api-docs'});
 });
 
 app.use('/api/posts', postsRouter);

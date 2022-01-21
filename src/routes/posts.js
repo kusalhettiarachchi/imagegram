@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   limits: {fileSize: FILE_SIZE_LIMIT},
-  fileFilter: function(req, file, cb) {
+  fileFilter: function(_, file, cb) {
     if (!['image/jpeg', 'image/png', 'image/bmp'].includes(file.mimetype)) {
       cb(new Error('filetype is not accesptable'));
     }
@@ -28,34 +28,44 @@ const upload = multer({
 });
 
 
-/* GET quotes listing. */
-router.get('/', function(req, res, next) {
+/* GET posts listing. */
+router.get('/', function(req, res) {
   try {
-    res.json(posts.getMultiple(req.query.page));
+    res.json(posts.getPosts(req.query.page));
   } catch(err) {
     console.error(`Error while getting posts `, err.message);
-    next(err);
+    res.json({msg: 'failed', data: {detail: err.message}});
   }
 });
 
 /* POST post */
-router.post('/', upload.single('image'), function(req, res, next) {
+router.post('/', upload.single('image'), 
+(req, res, next) => {
   try {
-    req.body.image_url = req.file.path;
-    res.json(posts.create(req.body));
-  } catch(err) {
-    console.error(`Error while adding post `, err.message);
-    next(err);
+    const result = posts.createPost(req.body, req.file.path);
+    res.json(result);
+    if (result.data && result.data.post_id) {
+      req.post_id = result.data.post_id;
+    }      
+    next();
+  } catch (err) {
+    console.error(`Error while creating a post `, err.message);
+    res.json({msg: 'failed', data: {detail: err.message}});
+  }
+}, (req) => {
+  if (req.post_id) {
+    console.log(`processing image for post ${req.post_id}`);
+    posts.processPost(req.post_id);
   }
 });
 
 /* POST comment */
-router.post('/:post_id/comment', function(req, res, next) {
+router.post('/:post_id/comment', (req, res) => {
   try {
     res.json(posts.createComment(req.params.post_id, req.body));
   } catch(err) {
     console.error(`Error while adding comment `, err.message);
-    next(err);
+    res.json({msg: 'failed', data: {detail: err.message}});
   }
 });
 
